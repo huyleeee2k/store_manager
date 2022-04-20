@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace SV18T1021118.DomainModel
 {
     /// <summary>
-    /// Nhaan vien
+    /// Nhân viên
     /// </summary>
     public class Employee
     {
