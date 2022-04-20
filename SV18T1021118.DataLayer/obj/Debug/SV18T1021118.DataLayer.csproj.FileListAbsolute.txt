@@ -1,0 +1,9 @@
+E:\MyWebNew\SV18T1021118.DataLayer\bin\Debug\SV18T1021118.DataLayer.dll
+E:\MyWebNew\SV18T1021118.DataLayer\bin\Debug\SV18T1021118.DataLayer.pdb
+E:\MyWebNew\SV18T1021118.DataLayer\obj\Debug\SV18T1021118.DataLayer.csprojAssemblyReference.cache
+E:\MyWebNew\SV18T1021118.DataLayer\obj\Debug\SV18T1021118.DataLayer.csproj.CoreCompileInputs.cache
+E:\MyWebNew\SV18T1021118.DataLayer\obj\Debug\SV18T1021118.DataLayer.dll
+E:\MyWebNew\SV18T1021118.DataLayer\obj\Debug\SV18T1021118.DataLayer.pdb
+E:\MyWebNew\SV18T1021118.DataLayer\bin\Debug\SV18T1021118.DomainModel.dll
+E:\MyWebNew\SV18T1021118.DataLayer\bin\Debug\SV18T1021118.DomainModel.pdb
+E:\MyWebNew\SV18T1021118.DataLayer\obj\Debug\SV18T1021118.DataLayer.csproj.CopyComplete
