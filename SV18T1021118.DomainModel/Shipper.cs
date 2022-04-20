@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace SV18T1021118.DomainModel
 {
     /// <summary>
-    /// Người giao hàng
+    /// Người giao hàng.
     /// </summary>
     public class Shipper
     {
