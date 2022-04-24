@@ -1,4 +1,5 @@
 ﻿using SV18T1021118.BusinessLayer;
+using SV18T1021118.DomainModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace SV18T1021118.Web.Controllers
     /// Controller shipper
     /// </summary>
     [Authorize]
+    [RoutePrefix("shipper")]
     public class ShipperController : Controller
     {
         /// <summary>
@@ -39,23 +41,62 @@ namespace SV18T1021118.Web.Controllers
         /// <returns></returns>
         public ActionResult Create()
         {
-            return View();
+            Shipper model = new Shipper()
+            {
+                ShipperID = 0
+            };
+            return View(model);
         }
         /// <summary>
-        /// Chỉnh sửa thông tin khách hàng
+        /// Chỉnh sửa thông tin ncc
         /// </summary>
         /// <returns></returns>
-        public ActionResult Edit()
+        [Route("edit/{shipperID}")]
+        public ActionResult Edit(int shipperId)
         {
-            return View();
+            Shipper model = CommonDataService.GetShipper(shipperId);
+            if (model == null)
+                return RedirectToAction("Index");
+
+            return View(model);
         }
         /// <summary>
-        /// Xóa thông tin khách hàng
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult Save(Shipper model)
+        {
+            //TODO: Kiểm tra dữ liệu đầu vào
+
+            if (model.ShipperID == 0)
+            {
+                CommonDataService.AddShipper(model);
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                CommonDataService.UpdateShipper(model);
+                return RedirectToAction("Index");
+            }
+        }
+        /// <summary>
+        /// Xác nhận có muốn xóa hay không
         /// </summary>
         /// <returns></returns>
-        public ActionResult Delete()
+        [Route("delete/{shipperID}")]
+        public ActionResult Delete(int shipperId)
         {
-            return View();
+            if (Request.HttpMethod == "POST")
+            {
+                CommonDataService.DeleteShipper(shipperId);
+                return RedirectToAction("Index");
+            }
+            var model = CommonDataService.GetShipper(shipperId);
+            if (model == null)
+                return RedirectToAction("Index");
+            return View(model);
         }
     }
 }

@@ -13,6 +13,7 @@ namespace SV18T1021118.Web.Controllers
     /// 
     /// </summary>
     [Authorize]
+    [RoutePrefix("supplier")]
     public class SupplierController : Controller
     {
         /// <summary>
@@ -54,23 +55,62 @@ namespace SV18T1021118.Web.Controllers
         /// <returns></returns>
         public ActionResult Create()
         {
-            return View();
+            Supplier model = new Supplier()
+            {
+                SupplierID = 0
+            };
+            return View(model);
         }
         /// <summary>
         /// Chỉnh sửa thông tin ncc
         /// </summary>
         /// <returns></returns>
-        public ActionResult Edit()
+        [Route("edit/{supplierId}")]
+        public ActionResult Edit(int supplierID)
         {
-            return View();
+            Supplier model = CommonDataService.GetSuppliers(supplierID);
+            if (model == null)
+                return RedirectToAction("Index");
+
+            return View(model);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult Save(Supplier model)
+        {
+            //TODO: Kiểm tra dữ liệu đầu vào
+
+            if (model.SupplierID == 0)
+            {
+                CommonDataService.AddSupplier(model);
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                CommonDataService.UpdateSupplier(model);
+                return RedirectToAction("Index");
+            }
         }
         /// <summary>
         /// Xác nhận có muốn xóa hay không
         /// </summary>
         /// <returns></returns>
-        public ActionResult Delete()
+        [Route("delete/{supplierID}")]
+        public ActionResult Delete(int SupplierID)
         {
-            return View();
+            if (Request.HttpMethod == "POST")
+            {
+                CommonDataService.DeleteSupplier(SupplierID);
+                return RedirectToAction("Index");
+            }
+            var model = CommonDataService.GetSuppliers(SupplierID);
+            if (model == null)
+                return RedirectToAction("Index");
+            return View(model);
         }
     }
 

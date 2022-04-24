@@ -1,28 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SV18T1021118.DataLayer;
+using SV18T1021118.DataLayer.SQLServer;
 using SV18T1021118.DomainModel;
-using System.Data;
 
 namespace SV18T1021118.DataLayer.SQLServer
 {
     /// <summary>
-    /// Xử lý dữ liệu tử database
+    /// Xử lý dữ liệu trên database
     /// </summary>
     public class EmployeeDAL : _BaseDAL, IEmployeeDAL
     {
         /// <summary>
-        /// 
+        /// Ctor
         /// </summary>
         /// <param name="connectionString"></param>
         public EmployeeDAL(string connectionString) : base(connectionString)
         {
-
         }
-
         /// <summary>
         /// 
         /// </summary>
@@ -30,7 +30,26 @@ namespace SV18T1021118.DataLayer.SQLServer
         /// <returns></returns>
         public int Add(Employee data)
         {
-            throw new NotImplementedException();
+            int result = 0;
+            using (SqlConnection cn = OpenConnection())
+            {
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandText = @"insert into Employees (LastName,FirstName,BirthDate,Photo,Notes,Email)
+                                        values (@lastName,@firstName,@birthDate,@photo,@notes,@email)
+                                        select scope_identity()";
+                cmd.CommandType = CommandType.Text;
+                cmd.Connection = cn;
+                cmd.Parameters.AddWithValue("@LastName", data.LastName);
+                cmd.Parameters.AddWithValue("@FirstName", data.FirstName);
+                cmd.Parameters.AddWithValue("@BirthDate", data.BirthDate);
+                cmd.Parameters.AddWithValue("@Photo", data.Photo);
+                cmd.Parameters.AddWithValue("@Notes", data.Notes);
+                cmd.Parameters.AddWithValue("@Email", data.Email);
+
+                result = Convert.ToInt32(cmd.ExecuteScalar());
+                cn.Close();
+            }
+            return result;
         }
         /// <summary>
         /// 
@@ -40,53 +59,107 @@ namespace SV18T1021118.DataLayer.SQLServer
         public int Count(string searchValue)
         {
             int count = 0;
-
-            searchValue = (searchValue != "") ? "%" + searchValue + "%" : searchValue;
+            if (searchValue != "")
+                searchValue = "%" + searchValue + "%";
 
             using (SqlConnection cn = OpenConnection())
             {
                 SqlCommand cmd = new SqlCommand();
-                cmd.CommandText = @"SELECT COUNT(*)
-                                    FROM Employees
-                                    WHERE (@searchValue = N'')
+                cmd.CommandText = @"SELECT    COUNT(*)
+                                    FROM    Employees
+                                    WHERE    (@searchValue = N'')
                                         OR    (
-                                                (FirstName LIKE @searchValue)
-                                                OR (LastName LIKE @searchValue)
-                                              )";
+                                                (LastName LIKE @searchValue)
+                                                OR (FirstName LIKE @searchValue)
+                                                OR (BirthDate LIKE @searchValue)
+                                   )";
                 cmd.CommandType = CommandType.Text;
                 cmd.Connection = cn;
-                cmd.Parameters.AddWithValue("@searchValue", searchValue);
+                cmd.Parameters.AddWithValue(@"searchValue", searchValue);
+
                 count = Convert.ToInt32(cmd.ExecuteScalar());
-                cn.Close();
             }
+
             return count;
         }
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="EmployeeId"></param>
+        /// <param name="data"></param>
         /// <returns></returns>
-        public bool Delete(int EmployeeId)
+        public bool Delete(int EmployeeID)
         {
-            throw new NotImplementedException();
+            bool result = false;
+            using (SqlConnection cn = OpenConnection())
+            {
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandText = @"DELETE FROM Employees WHERE EmployeeID = @EmployeeID";
+                cmd.CommandType = CommandType.Text;
+                cmd.Connection = cn;
+                cmd.Parameters.AddWithValue("@EmployeeID", EmployeeID);
+                result = cmd.ExecuteNonQuery() > 0;
+                cn.Close();
+
+            }
+            return result;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="employeeID"></param>
+        /// <returns></returns>
+        public Employee Get(int employeeID)
+        {
+            Employee result = null;
+            using (SqlConnection cn = OpenConnection())
+            {
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandText = @"SELECT * FROM Employees WHERE EmployeeID=@employeeID";
+                cmd.CommandType = CommandType.Text;
+                cmd.Connection = cn;
+
+                cmd.Parameters.AddWithValue("@employeeID", employeeID);
+
+                var dbReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                if (dbReader.Read())
+                {
+                    result = new Employee()
+                    {
+                        EmployeeID = Convert.ToInt32(dbReader["EmployeeID"]),
+                        LastName = Convert.ToString(dbReader["LastName"]),
+                        FirstName = Convert.ToString(dbReader["FirstName"]),
+                        BirthDate = Convert.ToDateTime(dbReader["BirthDate"]),
+                        Photo = Convert.ToString(dbReader["Photo"]),
+                        Notes = Convert.ToString(dbReader["Notes"]),
+                        Email = Convert.ToString(dbReader["Email"]),
+                        Password = Convert.ToString(dbReader["Password"])
+
+                    };
+                }
+                cn.Close();
+
+                return result;
+            }
         }
         /// <summary>
         /// 
         /// </summary>
         /// <param name="EmployeeID"></param>
         /// <returns></returns>
-        public Employee Get(int EmployeeID)
+        public bool InUsed(int EmployeeID)
         {
-            throw new NotImplementedException();
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="EmployeeId"></param>
-        /// <returns></returns>
-        public bool InUsed(int EmployeeId)
-        {
-            throw new NotImplementedException();
+            bool result = false;
+            using (SqlConnection cn = OpenConnection())
+            {
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandText = @"SELECT CASE WHEN EXISTS(SELECT * FROM Orders WHERE EmployeeID = @employeeID) THEN 1 ELSE 0 END";
+                cmd.CommandType = CommandType.Text;
+                cmd.Connection = cn;
+                cmd.Parameters.AddWithValue("@employeeID", EmployeeID);
+                result = Convert.ToBoolean(cmd.ExecuteScalar());
+                cn.Close();
+            }
+            return result;
         }
         /// <summary>
         /// 
@@ -98,26 +171,27 @@ namespace SV18T1021118.DataLayer.SQLServer
         public IList<Employee> List(int page, int pageSize, string searchValue)
         {
             List<Employee> data = new List<Employee>();
-
-            //if (searchValue != "")
-            //    searchValue = "%" + searchValue + "%";
-            searchValue = (searchValue != "") ? "%" + searchValue + "%" : searchValue;
+            if (searchValue != "")
+                searchValue = "%" + searchValue + "%";
 
             using (SqlConnection cn = OpenConnection())
             {
                 SqlCommand cmd = new SqlCommand();
-                cmd.CommandText = @"SELECT *
+                cmd.CommandText = @"SELECT    *
                                     FROM
                                     (
-                                        SELECT ROW_NUMBER() OVER(ORDER BY FirstName) AS RowNumber, *
-                                        FROM Employees
-                                        WHERE (@searchValue = N'')
-                                             OR (
-                                                    (FirstName LIKE @searchValue)
-                                                 OR (LastName LIKE @searchValue)                                                
+                                        SELECT ROW_NUMBER() OVER(ORDER BY LastName) AS RowNumber, *
+                                        FROM   Employees
+                                        WHERE    (@searchValue = N'')
+                                                OR    (
+                                                    (LastName LIKE @searchValue)
+                                                 OR (FirstName LIKE @searchValue)
+                                                 OR (BirthDate LIKE @searchValue)
+                                             
                                                 )
                                     ) AS t
                                     WHERE t.RowNumber BETWEEN (@page - 1) * @pageSize + 1 AND @page * @pageSize";
+
                 cmd.CommandType = System.Data.CommandType.Text;
                 cmd.Connection = cn;
 
@@ -125,9 +199,13 @@ namespace SV18T1021118.DataLayer.SQLServer
                 cmd.Parameters.AddWithValue("@pageSize", pageSize);
                 cmd.Parameters.AddWithValue("@searchValue", searchValue);
 
+
                 var result = cmd.ExecuteReader(CommandBehavior.CloseConnection);
                 while (result.Read())
                 {
+
+                    string acs = Convert.ToString(Convert.ToDateTime(result["BirthDate"]));
+                    Console.WriteLine(acs);
                     data.Add(new Employee()
                     {
                         EmployeeID = Convert.ToInt32(result["EmployeeID"]),
@@ -137,12 +215,14 @@ namespace SV18T1021118.DataLayer.SQLServer
                         Photo = Convert.ToString(result["Photo"]),
                         Notes = Convert.ToString(result["Notes"]),
                         Email = Convert.ToString(result["Email"]),
-                        Password = Convert.ToString(result["Password"]),
+                        Password = Convert.ToString(result["Password"])
                     });
                 }
                 result.Close();
                 cn.Close();
+
             }
+
 
             return data;
         }
@@ -153,7 +233,34 @@ namespace SV18T1021118.DataLayer.SQLServer
         /// <returns></returns>
         public bool Update(Employee data)
         {
-            throw new NotImplementedException();
+            bool result = false;
+            using (SqlConnection cn = OpenConnection())
+            {
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandText = @"Update Employees
+                                    set LastName=@lastName,
+                                        FirstName=@firstName,
+                                        BirthDate=@birthDate,
+                                        Photo=@photo,
+                                        Notes=@notes,
+                                        Email=@email
+                                        where EmployeeID=@employeeID";
+
+                cmd.CommandType = CommandType.Text;
+                cmd.Connection = cn;
+                cmd.Parameters.AddWithValue("@LastName", data.LastName);
+                cmd.Parameters.AddWithValue("@FirstName", data.FirstName);
+                cmd.Parameters.AddWithValue("@BirthDate", data.BirthDate);
+                cmd.Parameters.AddWithValue("@Photo", data.Photo);
+                cmd.Parameters.AddWithValue("@Notes", data.Notes);
+                cmd.Parameters.AddWithValue("@Email", data.Email);
+                cmd.Parameters.AddWithValue("@EmployeeID", data.EmployeeID);
+
+                result = cmd.ExecuteNonQuery() > 0;
+
+                cn.Close();
+            }
+            return result;
         }
     }
 }
