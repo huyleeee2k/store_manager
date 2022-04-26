@@ -14,12 +14,12 @@ namespace SV18T1021118.BusinessLayer
     /// </summary>
     public static class CommonDataService
     {
-        private static readonly ICategoryDAL categoryDB;
-        private static readonly ICustomerDAL customerDB;
-        private static readonly ISupllierDAL supllierDB;
-        private static readonly IShipperDAL shipperDB;
-        private static readonly IEmployeeDAL employeeDB;
-        private static readonly ICountryDAL countryDB;
+        private static readonly ICommonDAL<Category> categoryDB;
+        private static readonly ICommonDAL<Customer> customerDB;
+        private static readonly ICommonDAL<Supplier> supllierDB;
+        private static readonly ICommonDAL<Shipper> shipperDB;
+        private static readonly ICommonDAL<Employee> employeeDB;
+        private static readonly ICommonDAL<Country> countryDB;
         static CommonDataService()
         {
             string provider = ConfigurationManager.ConnectionStrings["DB"].ProviderName;
@@ -36,7 +36,6 @@ namespace SV18T1021118.BusinessLayer
                     countryDB = new DataLayer.SQLServer.CountryDAL(connectionString);
                     break;
                 default:
-                    categoryDB = new DataLayer.FakeDB.CategoryDAL();
                     break;
             }
         }
@@ -44,6 +43,12 @@ namespace SV18T1021118.BusinessLayer
         //public static ICategoryDAL CategoryDB { get => CategoryDB1; set => CategoryDB1 = value; }
         //public static ICategoryDAL CategoryDB1 { get => categoryDB; set => categoryDB = value; }
         //public static ICategoryDAL CategoryDB2 { get => categoryDB; set => categoryDB = value; }
+
+        public static List<Customer> List()
+        {
+            return customerDB.List().ToList();
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -96,7 +101,7 @@ namespace SV18T1021118.BusinessLayer
         /// Trả về danh sách các quốc gia từ CSDL
         /// </summary>
         /// <returns></returns>
-        public static List<Country> Country_List()
+        public static List<Country> ListOfCoutries(int page = 1, int pageSize = 0, string searchValue = "")
         {
             return countryDB.List().ToList();
         }
@@ -185,7 +190,6 @@ namespace SV18T1021118.BusinessLayer
         {
             return customerDB.InUsed(customerID);
         }
-
 
         /// <summary>
         /// 

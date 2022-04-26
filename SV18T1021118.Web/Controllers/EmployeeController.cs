@@ -70,12 +70,18 @@ namespace SV18T1021118.Web.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult Save(Employee model)
+        public ActionResult Save(Employee model, HttpPostedFileBase file)
         {
-            //TODO: Kiểm tra dữ liệu đầu vào
-
             if (model.EmployeeID == 0)
             {
+                string path = "";
+                if (file != null)
+                {
+                    file.SaveAs(HttpContext.Server.MapPath("~/UploadFiles/") + file.FileName);
+                    path = "/UploadFiles/" + file.FileName;
+                }
+                Console.WriteLine(path);
+                model.Photo = path;
                 CommonDataService.AddEmployee(model);
                 return RedirectToAction("Index");
             }

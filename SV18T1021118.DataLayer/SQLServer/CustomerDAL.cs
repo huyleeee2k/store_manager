@@ -12,7 +12,7 @@ namespace SV18T1021118.DataLayer.SQLServer
     /// <summary>
     /// Xử lý dữ liệu tử database
     /// </summary>
-    public class CustomerDAL : _BaseDAL,ICustomerDAL
+    public class CustomerDAL : _BaseDAL,ICommonDAL<Customer>
     {
         /// <summary>
         /// Contructor
@@ -188,7 +188,7 @@ namespace SV18T1021118.DataLayer.SQLServer
                                                  OR (Address LIKE @searchValue)
                                                 )
                                     ) AS t
-                                    WHERE t.RowNumber BETWEEN (@page - 1) * @pageSize + 1 AND @page * @pageSize";
+                                    WHERE (@PageSize = 0) OR (t.RowNumber BETWEEN (@page - 1) * @pageSize + 1 AND @page * @pageSize)";
                 cmd.CommandType = System.Data.CommandType.Text;
                 cmd.Connection = cn;
 

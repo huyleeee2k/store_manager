@@ -82,8 +82,30 @@ namespace SV18T1021118.Web.Controllers
         [HttpPost]
         public ActionResult Save(Supplier model)
         {
-            //TODO: Kiểm tra dữ liệu đầu vào
+            // Kiểm tra dữ liệu
+            if (string.IsNullOrWhiteSpace(model.SupplierName))
+                ModelState.AddModelError("SupplierName", "Tên nhà cung cấp không được để trống");
+            if (string.IsNullOrWhiteSpace(model.ContactName))
+                ModelState.AddModelError("ContactName", "Tên giao dịch không được để trống");
+            if (string.IsNullOrWhiteSpace(model.Address))
+                ModelState.AddModelError("Address", "Địa chỉ không được để trống");
+            if (string.IsNullOrWhiteSpace(model.Country))
+                ModelState.AddModelError("Country", "Quốc gia không được để trống");
+            if (string.IsNullOrWhiteSpace(model.Phone))
+                ModelState.AddModelError("Phone", "SĐT không được để trống");
 
+            if (string.IsNullOrWhiteSpace(model.City))
+                model.City = "";
+
+            if (string.IsNullOrWhiteSpace(model.PostalCode))
+                model.PostalCode = "";
+
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Title = model.SupplierID == 0 ? "Bổ sung nhà cung cấp" : "Thay đổi nhà cung cấp";
+                return View("Create", model);
+            }
+            //Lưu dữ liệu
             if (model.SupplierID == 0)
             {
                 CommonDataService.AddSupplier(model);

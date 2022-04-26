@@ -38,6 +38,9 @@ namespace SV18T1021118.Web.Models
         {
             get
             {
+                if (PageSize == 0)
+                    return 1;
+
                 int p = RowCount / PageSize;
                 if (RowCount % PageSize > 0)
                     p += 1;

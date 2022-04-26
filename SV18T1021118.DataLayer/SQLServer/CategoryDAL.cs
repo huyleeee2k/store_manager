@@ -13,7 +13,7 @@ namespace SV18T1021118.DataLayer.SQLServer
     /// <summary>
     /// xử lý dữ liệu trên database
     /// </summary>
-    public class CategoryDAL : _BaseDAL, ICategoryDAL
+    public class CategoryDAL : _BaseDAL, ICommonDAL<Category>
     {
         /// <summary>
         /// Ctor
@@ -182,7 +182,7 @@ namespace SV18T1021118.DataLayer.SQLServer
                                              
                                                 )
                                     ) AS t
-                                    WHERE t.RowNumber BETWEEN (@page - 1) * @pageSize + 1 AND @page * @pageSize";
+                                    WHERE (@PageSize = 0) OR (t.RowNumber BETWEEN (@page - 1) * @pageSize + 1 AND @page * @pageSize)";
                 cmd.CommandType = System.Data.CommandType.Text;
                 cmd.Connection = cn;
 

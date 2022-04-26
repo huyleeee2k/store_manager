@@ -12,7 +12,7 @@ namespace SV18T1021118.DataLayer.SQLServer
     /// <summary>
     /// Xử lý dữ liệu tử database
     /// </summary>
-    public class ShipperDAL : _BaseDAL, IShipperDAL
+    public class ShipperDAL : _BaseDAL, ICommonDAL<Shipper>
     {
         /// <summary>
         /// 
@@ -117,6 +117,7 @@ namespace SV18T1021118.DataLayer.SQLServer
                 {
                     result = new Shipper()
                     {
+                        ShipperID = Convert.ToInt32(dbReader["ShipperID"]),
                         ShipperName = Convert.ToString(dbReader["ShipperName"]),
                         Phone = Convert.ToString(dbReader["Phone"])
                     };
@@ -174,7 +175,7 @@ namespace SV18T1021118.DataLayer.SQLServer
                                                  OR (Phone LIKE @searchValue)
                                                 )
                                     ) AS t
-                                    WHERE t.RowNumber BETWEEN (@page - 1) * @pageSize + 1 AND @page * @pageSize";
+                                    WHERE (@PageSize = 0) OR (t.RowNumber BETWEEN (@page - 1) * @pageSize + 1 AND @page * @pageSize)";
                 cmd.CommandType = System.Data.CommandType.Text;
                 cmd.Connection = cn;
 

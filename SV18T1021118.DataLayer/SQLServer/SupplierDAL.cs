@@ -12,7 +12,7 @@ namespace SV18T1021118.DataLayer.SQLServer
     /// <summary>
     /// Xử lý dữ liệu từ database của nhà cung cấp
     /// </summary>
-    public class SupplierDAL : _BaseDAL, ISupllierDAL
+    public class SupplierDAL : _BaseDAL, ICommonDAL<Supplier>
     {
         /// <summary>
         /// contructor
@@ -186,7 +186,7 @@ namespace SV18T1021118.DataLayer.SQLServer
                                                  OR (Phone LIKE @searchValue)
                                                 )
                                     ) AS t
-                                    WHERE t.RowNumber BETWEEN (@page - 1) * @pageSize + 1 AND @page * @pageSize";
+                                    WHERE (@PageSize = 0) OR (t.RowNumber BETWEEN (@page - 1) * @pageSize + 1 AND @page * @pageSize)";
                 cmd.CommandType = CommandType.Text;
                 cmd.Connection = connection;
                 

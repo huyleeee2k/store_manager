@@ -8,21 +8,19 @@ using System.Web.Mvc;
 
 namespace SV18T1021118.Web.Controllers
 {
-    /// <summary>
-    /// Controller shipper
-    /// </summary>
     [Authorize]
     [RoutePrefix("shipper")]
     public class ShipperController : Controller
     {
         /// <summary>
-        /// Hiển thị giao diện người giao hàng
+        /// Tim kiem,hien thi và xoá danh sách
         /// </summary>
         /// <returns></returns>
-        // GET: Shipper
+        /// 
+
         public ActionResult Index(int page = 1, string searchValue = "")
         {
-            int pageSize = 5;
+            int pageSize = 10;
             int rowCount = 0;
             var data = CommonDataService.ListOfShippers(page, pageSize, searchValue, out rowCount);
             Models.ShipperPaginationResult model = new Models.ShipperPaginationResult()
@@ -33,10 +31,11 @@ namespace SV18T1021118.Web.Controllers
                 RowCount = rowCount,
                 Data = data
             };
+
             return View(model);
         }
         /// <summary>
-        /// Tạo mới một nhân viên giao hàng
+        /// Bổ sung người giao hàng
         /// </summary>
         /// <returns></returns>
         public ActionResult Create()
@@ -45,31 +44,34 @@ namespace SV18T1021118.Web.Controllers
             {
                 ShipperID = 0
             };
+            ViewBag.Title = "Bổ sung  nguoi giao hang ";
             return View(model);
         }
         /// <summary>
-        /// Chỉnh sửa thông tin ncc
+        /// Chỉnh sửa người giao hàng
         /// </summary>
         /// <returns></returns>
+        /// 
         [Route("edit/{shipperID}")]
-        public ActionResult Edit(int shipperId)
+        public ActionResult Edit(int shipperID)
         {
-            Shipper model = CommonDataService.GetShipper(shipperId);
+            Console.Write(shipperID);
+            Shipper model = CommonDataService.GetShipper(shipperID);
             if (model == null)
                 return RedirectToAction("Index");
 
-            return View(model);
+            ViewBag.Title = "Thay đổi thông tin nguoi giao hang";
+            return View("Create", model);
         }
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="model"></param>
         /// <returns></returns>
+        /// 
         [HttpPost]
         public ActionResult Save(Shipper model)
         {
             //TODO: Kiểm tra dữ liệu đầu vào
-
             if (model.ShipperID == 0)
             {
                 CommonDataService.AddShipper(model);
@@ -80,23 +82,27 @@ namespace SV18T1021118.Web.Controllers
                 CommonDataService.UpdateShipper(model);
                 return RedirectToAction("Index");
             }
+
         }
         /// <summary>
-        /// Xác nhận có muốn xóa hay không
+        /// 
         /// </summary>
         /// <returns></returns>
+        /// 
         [Route("delete/{shipperID}")]
-        public ActionResult Delete(int shipperId)
+        public ActionResult Delete(int shipperID)
         {
             if (Request.HttpMethod == "POST")
             {
-                CommonDataService.DeleteShipper(shipperId);
+                CommonDataService.DeleteShipper(shipperID);
                 return RedirectToAction("Index");
             }
-            var model = CommonDataService.GetShipper(shipperId);
+            var model = CommonDataService.GetShipper(shipperID);
             if (model == null)
                 return RedirectToAction("Index");
             return View(model);
         }
+
+
     }
 }

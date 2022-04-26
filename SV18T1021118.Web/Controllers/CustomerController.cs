@@ -71,18 +71,38 @@ namespace SV18T1021118.Web.Controllers
         [HttpPost]
         public ActionResult Save(Customer model)
         {
-            //TODO: Kiểm tra dữ liệu đầu vào
+            //Kiểm tra dữ liệu đầu vào
+            if (string.IsNullOrWhiteSpace(model.CustomerName))
+                ModelState.AddModelError("CustomerName", "Tên khách hàng không được để trống");
 
+            if (string.IsNullOrWhiteSpace(model.ContactName))
+                ModelState.AddModelError("ContactName", "Tên giao dịch không được để trống");
+
+            if (string.IsNullOrWhiteSpace(model.Address))
+                ModelState.AddModelError("Address", "Địa chỉ không được để trống");
+
+            if (string.IsNullOrWhiteSpace(model.Country))
+                ModelState.AddModelError("Country", "Quốc gia không được để trống");
+
+            if (string.IsNullOrWhiteSpace(model.City))
+                model.City = "";
+
+            if (string.IsNullOrWhiteSpace(model.PostalCode))
+                model.PostalCode = "";
+
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Title = model.CustomerID == 0 ? "Bổ sung khách hàng" : "Thay đổi khách hàng";
+                return View("Create", model);
+            }
+
+            //Lưu dữ liệu
             if (model.CustomerID == 0)
-            {
                 CommonDataService.AddCustomer(model);
-                return RedirectToAction("Index");
-            }
             else
-            {
-                CommonDataService.UpdateCustomer(model);
-                return RedirectToAction("Index");
-            }
+                CommonDataService.UpdateCustomer(model);              
+            
+            return RedirectToAction("Index");
         }
 
         /// <summary>

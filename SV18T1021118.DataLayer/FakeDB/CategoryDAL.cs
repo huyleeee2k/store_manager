@@ -7,7 +7,7 @@ using SV18T1021118.DomainModel;
 
 namespace SV18T1021118.DataLayer.FakeDB
 {
-    public class CategoryDAL : ICategoryDAL
+    public class CategoryDAL : ICommonDAL<Category>
     {
         public int Add(Category data)
         {
