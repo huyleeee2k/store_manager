@@ -1,0 +1,11 @@
+E:\MyWebNew\SV18T1021118.BusinessLayer\bin\Debug\SV18T1021118.BusinessLayer.dll
+E:\MyWebNew\SV18T1021118.BusinessLayer\bin\Debug\SV18T1021118.BusinessLayer.pdb
+E:\MyWebNew\SV18T1021118.BusinessLayer\obj\Debug\SV18T1021118.BusinessLayer.csprojAssemblyReference.cache
+E:\MyWebNew\SV18T1021118.BusinessLayer\obj\Debug\SV18T1021118.BusinessLayer.csproj.CoreCompileInputs.cache
+E:\MyWebNew\SV18T1021118.BusinessLayer\obj\Debug\SV18T1021118.BusinessLayer.dll
+E:\MyWebNew\SV18T1021118.BusinessLayer\obj\Debug\SV18T1021118.BusinessLayer.pdb
+E:\MyWebNew\SV18T1021118.BusinessLayer\bin\Debug\SV18T1021118.DataLayer.dll
+E:\MyWebNew\SV18T1021118.BusinessLayer\bin\Debug\SV18T1021118.DomainModel.dll
+E:\MyWebNew\SV18T1021118.BusinessLayer\bin\Debug\SV18T1021118.DataLayer.pdb
+E:\MyWebNew\SV18T1021118.BusinessLayer\bin\Debug\SV18T1021118.DomainModel.pdb
+E:\MyWebNew\SV18T1021118.BusinessLayer\obj\Debug\SV18T1021118.BusinessLayer.csproj.CopyComplete
