@@ -18,6 +18,5 @@ namespace SV18T1021118.DomainModel
         public string Photo { get; set; }
         public string Notes { get; set; }
         public string Email { get; set; }
-        public string Password { get; set; }
     }
 }

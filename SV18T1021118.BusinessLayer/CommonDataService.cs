@@ -20,6 +20,8 @@ namespace SV18T1021118.BusinessLayer
         private static readonly ICommonDAL<Shipper> shipperDB;
         private static readonly ICommonDAL<Employee> employeeDB;
         private static readonly ICommonDAL<Country> countryDB;
+        private static readonly ICommonDAL<Product> productDB;
+        private static readonly ICommonDAL<ProductAttribute> productAttributeDB;
         static CommonDataService()
         {
             string provider = ConfigurationManager.ConnectionStrings["DB"].ProviderName;
@@ -34,6 +36,8 @@ namespace SV18T1021118.BusinessLayer
                     shipperDB = new DataLayer.SQLServer.ShipperDAL(connectionString);
                     employeeDB = new DataLayer.SQLServer.EmployeeDAL(connectionString);
                     countryDB = new DataLayer.SQLServer.CountryDAL(connectionString);
+                    productDB = new DataLayer.SQLServer.ProductDAL(connectionString);
+                    productAttributeDB = new DataLayer.SQLServer.ProductAttributeDAL(connectionString);
                     break;
                 default:
                     break;
@@ -44,6 +48,95 @@ namespace SV18T1021118.BusinessLayer
         //public static ICategoryDAL CategoryDB1 { get => categoryDB; set => categoryDB = value; }
         //public static ICategoryDAL CategoryDB2 { get => categoryDB; set => categoryDB = value; }
 
+        /// <summary>
+        /// Lấy danh sách mặt hàng và phân trang
+        /// </summary>
+        /// <param name="categoryName"></param>
+        /// <param name="supplierName"></param>
+        /// <param name="page"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="searchValue"></param>
+        /// <param name="rowCount"></param>
+        /// <returns></returns>
+        public static List<Product> ListOfProducts(string categoryName, string supplierName, int page, int pageSize, string searchValue, out int rowCount)
+        {
+            rowCount = productDB.CountByValue(categoryName, supplierName, searchValue);
+            return productDB.ListProducts(categoryName, supplierName, page, pageSize, searchValue).ToList();
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="productID"></param>
+        /// <returns></returns>
+        public static List<ProductAttribute> ListProductAttributeByProductID(int productID)
+        {
+            return productAttributeDB.List(productID).ToList();
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static int AddProductAttribute(ProductAttribute data)
+        {
+            return productAttributeDB.Add(data);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static int AddProduct(Product data)
+        {
+            return productDB.Add(data);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static bool DeleteProduct(int productID)
+        {
+            if (productDB.InUsed(productID))
+                return false;
+            return productDB.Delete(productID);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="categoryID"></param>
+        /// <returns></returns>
+        public static Product GetProduct(int productID)
+        {
+            return productDB.Get(productID);
+        }
+
+        /// <summary>
+        /// Kiểm tra mat hang có liên kết trong csdl hay chưa
+        /// </summary>
+        /// <param name="customerID"></param>
+        /// <returns></returns>
+        public static bool InUsedProduct(int productID)
+        {
+            return productDB.InUsed(productID);
+        }
+
+        /// <summary>
+        /// Cập nhật mặt hàng
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static bool UpdateProduct(Product data)
+        {
+            return productDB.Update(data);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public static List<Customer> List()
         {
             return customerDB.List().ToList();
@@ -58,6 +151,16 @@ namespace SV18T1021118.BusinessLayer
         {
             return categoryDB.Add(data);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static List<Category> ListOfNameCategories()
+        {
+            return categoryDB.List().ToList();
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -203,6 +306,11 @@ namespace SV18T1021118.BusinessLayer
         {
             rowCount = supllierDB.Count(searchValue);
             return supllierDB.List(page, pageSize, searchValue).ToList();
+        }
+
+        public static List<Supplier> ListOfNameSuppliers()
+        {
+            return supllierDB.List().ToList();
         }
 
         /// <summary>

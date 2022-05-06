@@ -139,6 +139,8 @@
     <Compile Include="Models\CustomerPaginationResult.cs" />
     <Compile Include="Models\EmployeePaginationResult.cs" />
     <Compile Include="Models\FileUploadModel.cs" />
+    <Compile Include="Models\PaginationSearchInput.cs" />
+    <Compile Include="Models\ProductPaginationResults.cs" />
     <Compile Include="Models\ShipperPaginationResult.cs" />
     <Compile Include="Models\SupplierPaginationResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -152,6 +154,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\Products\galaxy-samsung.jpg" />
     <Content Include="Photos\sunset.jpg" />
     <Content Include="Photos\sunset1.jpg" />
     <Content Include="Scripts\bootstrap.js" />
@@ -167,6 +170,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\Search.js" />
     <Content Include="Themes\bower_components\bootstrap-colorpicker\dist\css\bootstrap-colorpicker.css" />
     <Content Include="Themes\bower_components\bootstrap-colorpicker\dist\css\bootstrap-colorpicker.min.css" />
     <Content Include="Themes\bower_components\bootstrap-colorpicker\dist\img\bootstrap-colorpicker\alpha-horizontal.png" />
@@ -5797,7 +5801,6 @@
     <Content Include="Views\Customer\Index.cshtml" />
     <Content Include="Views\Shipper\Index.cshtml" />
     <Content Include="Views\Employee\Index.cshtml" />
-    <Content Include="Views\Product\Index.cshtml" />
     <Content Include="Views\Order\Index.cshtml" />
     <Content Include="Views\Order\Create.cshtml" />
     <Content Include="Views\Account\ChangePassword.cshtml" />
@@ -5819,9 +5822,22 @@
     <Content Include="Views\Customer\Create - Copy.cshtml" />
     <Content Include="Views\Supplier\Create - Copy.cshtml" />
     <Content Include="Views\FileUpload\Index.cshtml" />
+    <Content Include="Views\Employee\Create - Copy.cshtml" />
+    <Content Include="Views\Employee\Delete - Copy.cshtml" />
+    <Content Include="Views\Employee\Index - Copy.cshtml" />
+    <Content Include="Views\Product\Attribute.cshtml" />
+    <Content Include="Views\Product\Create.cshtml" />
+    <Content Include="Views\Product\Delete.cshtml" />
+    <Content Include="Views\Product\Edit.cshtml" />
+    <Content Include="Views\Product\Index.cshtml" />
+    <Content Include="Views\Product\Photo.cshtml" />
+    <Content Include="Views\Customer\Search.cshtml" />
+    <Content Include="Views\Supplier\Search.cshtml" />
+    <Content Include="Views\Shipper\Search.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Images\Employees\" />
     <Folder Include="UploadFiles\" />
   </ItemGroup>
   <ItemGroup>

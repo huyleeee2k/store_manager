@@ -82,6 +82,12 @@ namespace SV18T1021118.DataLayer.SQLServer
 
             return count;
         }
+
+        public int CountByValue(string categoryName, string supplierName, string searchValue)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -131,8 +137,8 @@ namespace SV18T1021118.DataLayer.SQLServer
                         BirthDate = Convert.ToDateTime(dbReader["BirthDate"]),
                         Photo = Convert.ToString(dbReader["Photo"]),
                         Notes = Convert.ToString(dbReader["Notes"]),
-                        Email = Convert.ToString(dbReader["Email"]),
-                        Password = Convert.ToString(dbReader["Password"])
+                        Email = Convert.ToString(dbReader["Email"])
+                        //Password = Convert.ToString(dbReader["Password"])
 
                     };
                 }
@@ -215,7 +221,7 @@ namespace SV18T1021118.DataLayer.SQLServer
                         Photo = Convert.ToString(result["Photo"]),
                         Notes = Convert.ToString(result["Notes"]),
                         Email = Convert.ToString(result["Email"]),
-                        Password = Convert.ToString(result["Password"])
+                        //Password = Convert.ToString(result["Password"])
                     });
                 }
                 result.Close();
@@ -226,6 +232,22 @@ namespace SV18T1021118.DataLayer.SQLServer
 
             return data;
         }
+
+        public IList<Employee> List()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IList<Employee> List(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IList<Employee> ListProducts(string categoryName, string supplierName, int page = 1, int pageSize = 0, string searchValue = "")
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// 
         /// </summary>

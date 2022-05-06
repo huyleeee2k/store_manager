@@ -34,6 +34,11 @@ namespace SV18T1021118.DataLayer.SQLServer
             throw new NotImplementedException();
         }
 
+        public int CountByValue(string categoryName, string supplierName, string searchValue)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool Delete(int id)
         {
             throw new NotImplementedException();
@@ -100,6 +105,16 @@ namespace SV18T1021118.DataLayer.SQLServer
                 cn.Close();
             }
             return data;
+        }
+
+        public IList<Country> List(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IList<Country> ListProducts(string categoryName, string supplierName, int page = 1, int pageSize = 0, string searchValue = "")
+        {
+            throw new NotImplementedException();
         }
 
         public bool Update(Country data)

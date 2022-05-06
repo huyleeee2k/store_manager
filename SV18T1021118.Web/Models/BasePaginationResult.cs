@@ -31,6 +31,10 @@ namespace SV18T1021118.Web.Models
         /// </summary>
         public int RowCount { get; set; }
 
+        public string CategoryName { get; set; }
+
+        public string SupllierName { get; set; }
+
         /// <summary>
         /// Số lượng trang
         /// </summary>

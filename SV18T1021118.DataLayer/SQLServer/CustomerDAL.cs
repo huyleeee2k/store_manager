@@ -82,6 +82,12 @@ namespace SV18T1021118.DataLayer.SQLServer
             }
             return count;
         }
+
+        public int CountByValue(string categoryName, string supplierName, string searchValue)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -216,6 +222,22 @@ namespace SV18T1021118.DataLayer.SQLServer
 
             return data;
         }
+
+        public IList<Customer> List()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IList<Customer> List(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IList<Customer> ListProducts(string categoryName, string supplierName, int page = 1, int pageSize = 0, string searchValue = "")
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// 
         /// </summary>

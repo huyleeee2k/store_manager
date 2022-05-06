@@ -253,5 +253,48 @@ namespace SV18T1021118.DataLayer.SQLServer
             }
             return result;
         }
+
+        /// <summary>
+        /// Lấy danh sách nhà cung cấp
+        /// </summary>
+        /// <returns></returns>
+        public IList<Supplier> List()
+        {
+            List<Supplier> data = new List<Supplier>();
+            using (SqlConnection cn = OpenConnection())
+            {
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandText = @"SELECT SupplierName FROM Suppliers";
+                cmd.CommandType = CommandType.Text;
+                cmd.Connection = cn;
+
+                SqlDataReader dbReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                while (dbReader.Read())
+                {
+                    data.Add(new Supplier()
+                    {
+                        SupplierName = Convert.ToString(dbReader["SupplierName"])
+                    });
+                }
+                dbReader.Close();
+                cn.Close();
+            }
+            return data;
+        }
+
+        public IList<Supplier> ListProducts(string categoryName, string supplierName, int page = 1, int pageSize = 0, string searchValue = "")
+        {
+            throw new NotImplementedException();
+        }
+
+        public int CountByValue(string categoryName, string supplierName, string searchValue)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IList<Supplier> List(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

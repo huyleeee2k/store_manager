@@ -23,31 +23,39 @@ namespace SV18T1021118.Web.Controllers
         /// <param name="searchValue"></param>
         /// <returns></returns>
         // GET: Supplier
-        public ActionResult Index(int page = 1, string searchValue = "")
+        public ActionResult Index()
         {
-            int pageSize = 5;
+            Models.PaginationSearchInput model = Session["SUPPLIER_SEARCH"] as Models.PaginationSearchInput;
+            if (model == null)
+            {
+                model = new Models.PaginationSearchInput()
+                {
+                    Page = 1,
+                    PageSize = 10,
+                    SearchValue = ""
+                };
+            }
+            return View(model);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public ActionResult Search(Models.PaginationSearchInput input)
+        {
             int rowCount = 0;
-            var data = CommonDataService.ListOfSuppliers(page, pageSize, searchValue, out rowCount);
+            var data = CommonDataService.ListOfSuppliers(input.Page, input.PageSize, input.SearchValue, out rowCount);
             Models.SupplierPaginationResult model = new Models.SupplierPaginationResult()
             {
-                Page = page,
-                PageSize = pageSize,
-                SearchValue = searchValue,
+                Page = input.Page,
+                PageSize = input.PageSize,
+                SearchValue = input.SearchValue,
                 RowCount = rowCount,
                 Data = data
             };
+            Session["SUPPLIER_SEARCH"] = input;
             return View(model);
-            //int pageSize = 10;
-            //int rowCount = 0;
-            //var model = CommonDataService.ListOfSupplier(page, pageSize, searchValue, out rowCount);
-            //int pageCount = rowCount / pageSize;
-            //if (rowCount % pageSize > 0)
-            //    pageCount += 1;
-            //ViewBag.PageCount = pageCount;
-            //ViewBag.RowCount = rowCount;
-            //ViewBag.SearchValue = searchValue;
-            //ViewBag.CurrentPage = page;
-            //return View(model);
         }
         /// <summary>
         /// Tạo mới nhà cung cấp

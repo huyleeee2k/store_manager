@@ -79,6 +79,12 @@ namespace SV18T1021118.DataLayer.SQLServer
 
             return count;
         }
+
+        public int CountByValue(string categoryName, string supplierName, string searchValue)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -210,6 +216,45 @@ namespace SV18T1021118.DataLayer.SQLServer
 
             return data;
         }
+
+        /// <summary>
+        /// Lấy danh sách loại hàng
+        /// </summary>
+        /// <returns></returns>
+        public IList<Category> List()
+        {
+            List<Category> data = new List<Category>();
+            using (SqlConnection cn = OpenConnection())
+            {
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandText = @"SELECT CategoryName FROM Categories";
+                cmd.CommandType = CommandType.Text;
+                cmd.Connection = cn;
+
+                SqlDataReader dbReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                while (dbReader.Read())
+                {
+                    data.Add(new Category()
+                    {
+                        CategoryName = Convert.ToString(dbReader["CategoryName"])
+                    });
+                }
+                dbReader.Close();
+                cn.Close();
+            }
+            return data;
+        }
+
+        public IList<Category> List(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IList<Category> ListProducts(string categoryName, string supplierName, int page = 1, int pageSize = 0, string searchValue = "")
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// 
         /// </summary>

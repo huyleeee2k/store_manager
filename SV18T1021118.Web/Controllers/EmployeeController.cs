@@ -70,27 +70,51 @@ namespace SV18T1021118.Web.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult Save(Employee model, HttpPostedFileBase file)
+        public ActionResult Save(Employee model, string dayOfBirth, HttpPostedFileBase uploadPhoto)
         {
+            if (string.IsNullOrWhiteSpace(model.FirstName))
+                ModelState.AddModelError("FirstName", "Tên không được bổ trống");
+            if (string.IsNullOrWhiteSpace(model.LastName))
+                ModelState.AddModelError("LastName", "Họ không được bổ trống");
+            if (string.IsNullOrWhiteSpace(model.Email))
+                ModelState.AddModelError("Email", "Tên không được bổ trống");
+            if (string.IsNullOrWhiteSpace(model.Notes))
+                model.Notes = "";
+
+            //Chuyển chuỗi ngày (có kiểu DMY) sang giá trị ngày để lưu vào model.BirthDate
+            try
+            {
+                model.BirthDate = DateTime.ParseExact(dayOfBirth, "d/M/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+            }
+            catch
+            {
+                ModelState.AddModelError("BirthDate", "Ngày sinh " + model.BirthDate + " không hợp lệ");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Title = model.EmployeeID == 0 ? "Bổ sung nhân viên" : "Chỉnh sửa nhân viên";
+                return View("Create", model);
+            }
+
+            if (uploadPhoto != null)
+            {
+                string path = Server.MapPath("~/Images/Employees");
+                string fileName = $"{DateTime.Now.Ticks} - {uploadPhoto.FileName}";
+                string filePath = System.IO.Path.Combine(path, fileName);
+                uploadPhoto.SaveAs(filePath);
+                model.Photo = fileName;
+            }
+
             if (model.EmployeeID == 0)
             {
-                string path = "";
-                if (file != null)
-                {
-                    file.SaveAs(HttpContext.Server.MapPath("~/UploadFiles/") + file.FileName);
-                    path = "/UploadFiles/" + file.FileName;
-                }
-                Console.WriteLine(path);
-                model.Photo = path;
                 CommonDataService.AddEmployee(model);
-                return RedirectToAction("Index");
             }
             else
             {
-                CommonDataService.UpdateEmployee(model);
-                return RedirectToAction("Index");
+                CommonDataService.UpdateEmployee(model);             
             }
-
+            return RedirectToAction("Index");
         }
 
         /// <summary>

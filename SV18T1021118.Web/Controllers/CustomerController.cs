@@ -17,23 +17,43 @@ namespace SV18T1021118.Web.Controllers
     public class CustomerController : Controller
     {
         /// <summary>
-        /// Tìm kiếm hiển thị thông tin khách hàng
+        /// Giao diện để hiển thị tìm kiếm 
         /// </summary>
         /// <returns></returns>
         // GET: Customer
-        public ActionResult Index(int page = 1, string searchValue = "")
+        public ActionResult Index()
         {
-            int pageSize = 5;
+            Models.PaginationSearchInput model = Session["CUSTOMER_SEARCH"] as Models.PaginationSearchInput;
+            if (model == null)
+            {
+                model = new Models.PaginationSearchInput()
+                {
+                    Page = 1,
+                    PageSize = 10,
+                    SearchValue = ""
+                };
+            }
+            return View(model);
+        }
+
+        /// <summary>
+        /// Thực hiện chức năng tìm kiếm phân trang
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public ActionResult Search(Models.PaginationSearchInput input)
+        {
             int rowCount = 0;
-            var data = CommonDataService.ListOfCustomers(page, pageSize, searchValue, out rowCount);
+            var data = CommonDataService.ListOfCustomers(input.Page, input.PageSize, input.SearchValue, out rowCount);
             Models.CustomerPaginationResult model = new Models.CustomerPaginationResult()
             {
-                Page = page,
-                PageSize = pageSize,
-                SearchValue = searchValue,
+                Page = input.Page,
+                PageSize = input.PageSize,
+                SearchValue = input.SearchValue,
                 RowCount = rowCount,
                 Data = data
             };
+            Session["CUSTOMER_SEARCH"] = input;
             return View(model);
         }
 
@@ -98,7 +118,10 @@ namespace SV18T1021118.Web.Controllers
 
             //Lưu dữ liệu
             if (model.CustomerID == 0)
+            {
                 CommonDataService.AddCustomer(model);
+                Session["CUSTOMER_NAME"] = model.CustomerName;
+            }
             else
                 CommonDataService.UpdateCustomer(model);              
             
