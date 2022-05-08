@@ -50,6 +50,7 @@
     <Compile Include="SQLServer\EmployeeDAL.cs" />
     <Compile Include="SQLServer\ProductAttributeDAL.cs" />
     <Compile Include="SQLServer\ProductDAL.cs" />
+    <Compile Include="SQLServer\ProductPhotoDAL.cs" />
     <Compile Include="SQLServer\ShipperDAL.cs" />
     <Compile Include="SQLServer\SupplierDAL.cs" />
     <Compile Include="SQLServer\_BaseDAL.cs" />

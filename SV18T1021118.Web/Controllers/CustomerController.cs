@@ -67,6 +67,7 @@ namespace SV18T1021118.Web.Controllers
             {
                 CustomerID = 0
             };
+            Session["CUSTOMER_NAME"] = "";
             return View(model);
         }
 

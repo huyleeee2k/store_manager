@@ -53,7 +53,7 @@ namespace SV18T1021118.Web.Controllers
                 SearchValue = input.SearchValue,
                 RowCount = rowCount,
                 Data = data
-            };
+            };               
             Session["SUPPLIER_SEARCH"] = input;
             return View(model);
         }
@@ -65,8 +65,9 @@ namespace SV18T1021118.Web.Controllers
         {
             Supplier model = new Supplier()
             {
-                SupplierID = 0
+                SupplierID = 0  
             };
+            Session["SUPPLIER_NAME"] = "";
             return View(model);
         }
         /// <summary>
@@ -117,6 +118,7 @@ namespace SV18T1021118.Web.Controllers
             if (model.SupplierID == 0)
             {
                 CommonDataService.AddSupplier(model);
+                Session["SUPPLIER_NAME"] = model.SupplierName;
                 return RedirectToAction("Index");
             }
             else

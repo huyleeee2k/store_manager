@@ -139,6 +139,7 @@
     <Compile Include="Models\CustomerPaginationResult.cs" />
     <Compile Include="Models\EmployeePaginationResult.cs" />
     <Compile Include="Models\FileUploadModel.cs" />
+    <Compile Include="Models\PaginationProductSearchInput.cs" />
     <Compile Include="Models\PaginationSearchInput.cs" />
     <Compile Include="Models\ProductPaginationResults.cs" />
     <Compile Include="Models\ShipperPaginationResult.cs" />
@@ -5834,10 +5835,14 @@
     <Content Include="Views\Customer\Search.cshtml" />
     <Content Include="Views\Supplier\Search.cshtml" />
     <Content Include="Views\Shipper\Search.cshtml" />
+    <Content Include="Views\Employee\Search.cshtml" />
+    <Content Include="Views\Category\Search.cshtml" />
+    <Content Include="Views\Product\Search.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Images\Employees\" />
+    <Folder Include="Images\ProductPhotos\" />
     <Folder Include="UploadFiles\" />
   </ItemGroup>
   <ItemGroup>

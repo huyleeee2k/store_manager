@@ -21,22 +21,42 @@ namespace SV18T1021118.Web.Controllers
         /// <returns></returns>
         ///
 
-        public ActionResult Index(int page = 1, string searchValue = "")
+        public ActionResult Index()
         {
-            int pageSize = 10;
+            Models.PaginationSearchInput model = Session["CATEGORY_SEARCH"] as Models.PaginationSearchInput;
+            if (model == null)
+            {
+                model = new Models.PaginationSearchInput()
+                {
+                    Page = 1,
+                    PageSize = 10,
+                    SearchValue = ""
+                };
+            }
+            return View(model);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public ActionResult Search(Models.PaginationSearchInput input)
+        {
             int rowCount = 0;
-            var data = CommonDataService.ListOfCategories(page, pageSize, searchValue, out rowCount);
+            var data = CommonDataService.ListOfCategories(input.Page, input.PageSize, input.SearchValue, out rowCount);
             Models.CategoryPaginationResults model = new Models.CategoryPaginationResults()
             {
-                Page = page,
-                PageSize = pageSize,
-                SearchValue = searchValue,
+                Page = input.Page,
+                PageSize = input.PageSize,
+                SearchValue = input.SearchValue,
                 RowCount = rowCount,
                 Data = data
             };
-
+            Session["CATEGORY_SEARCH"] = input;
             return View(model);
         }
+
         /// <summary>
         /// Bổ sung loại hàng
         /// </summary>
@@ -47,6 +67,7 @@ namespace SV18T1021118.Web.Controllers
             {
                 CategoryID = 0
             };
+            Session["CATEGORY_NAME"] = "";
             ViewBag.Title = "Bổ sung  loại hàng ";
             return View(model);
         }
@@ -87,6 +108,7 @@ namespace SV18T1021118.Web.Controllers
             if (model.CategoryID == 0)
             {
                 CommonDataService.AddCategory(model);
+                Session["CATEGORY_NAME"] = model.CategoryName;
                 return RedirectToAction("Index");
             }
             else
