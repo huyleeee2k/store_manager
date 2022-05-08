@@ -22,6 +22,7 @@ namespace SV18T1021118.BusinessLayer
         private static readonly ICommonDAL<Country> countryDB;
         private static readonly ICommonDAL<Product> productDB;
         private static readonly ICommonDAL<ProductAttribute> productAttributeDB;
+        private static readonly ICommonDAL<ProductPhoto> productPhotoDB;
         static CommonDataService()
         {
             string provider = ConfigurationManager.ConnectionStrings["DB"].ProviderName;
@@ -38,6 +39,7 @@ namespace SV18T1021118.BusinessLayer
                     countryDB = new DataLayer.SQLServer.CountryDAL(connectionString);
                     productDB = new DataLayer.SQLServer.ProductDAL(connectionString);
                     productAttributeDB = new DataLayer.SQLServer.ProductAttributeDAL(connectionString);
+                    productPhotoDB = new DataLayer.SQLServer.ProductPhotoDAL(connectionString);
                     break;
                 default:
                     break;
@@ -68,9 +70,18 @@ namespace SV18T1021118.BusinessLayer
         /// </summary>
         /// <param name="productID"></param>
         /// <returns></returns>
-        public static List<ProductAttribute> ListProductAttributeByProductID(int productID)
+        public static List<ProductAttribute> ListOfProductAttributes(int productID)
         {
             return productAttributeDB.List(productID).ToList();
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static bool UpdateProductAttribute(ProductAttribute data)
+        {
+            return productAttributeDB.Update(data);
         }
         /// <summary>
         /// 
@@ -80,6 +91,71 @@ namespace SV18T1021118.BusinessLayer
         public static int AddProductAttribute(ProductAttribute data)
         {
             return productAttributeDB.Add(data);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static bool DeleteProductAttribute(int id)
+        {
+            return productAttributeDB.Delete(id);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="attributeID"></param>
+        /// <returns></returns>
+        public static ProductAttribute GetProductAttribute(int attributeID)
+        {
+            return productAttributeDB.Get(attributeID);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="productID"></param>
+        /// <returns></returns>
+        public static List<ProductPhoto> ListOfProductPhotos(int productID)
+        {
+            return productPhotoDB.List(productID).ToList();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static int AddProductPhoto(ProductPhoto data)
+        {
+            return productPhotoDB.Add(data);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="photoID"></param>
+        /// <returns></returns>
+        public static ProductPhoto GetProductPhoto(int photoID)
+        {
+            return productPhotoDB.Get(photoID);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="photoID"></param>
+        /// <returns></returns>
+        public static bool DeleteProductPhoto(int photoID)
+        {
+            return productPhotoDB.Delete(photoID);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static bool UpdateProductPhoto(ProductPhoto data)
+        {
+            return productPhotoDB.Update(data);
         }
         /// <summary>
         /// 
