@@ -21,35 +21,23 @@ namespace SV18T1021118.Web.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
-        public ActionResult Index(string categoryName = "", string supplierName = "", int page = 1, string searchValue = "")
+        public ActionResult Index()
         {
-            //Models.PaginationProductSearchInput model = Session["PRODUCT_SEARCH"] as Models.PaginationProductSearchInput;
-            //if (model == null)
-            //{
-            //    model = new Models.PaginationProductSearchInput()
-            //    {
-            //        Page = 1,
-            //        PageSize = 10,
-            //        SearchValue = "",
-            //        CategoryName = "",
-            //        SupplierName = ""
-            //    };
-            //}
-            //return View(model);
-            int pageSize = 5;
-            int rowCount = 0;
-            var data = CommonDataService.ListOfProducts(categoryName, supplierName, page, pageSize, searchValue, out rowCount);
+            Models.PaginationProductSearchInput model = Session["PRODUCT_SEARCH"] as Models.PaginationProductSearchInput;
 
-            Models.ProductPaginationResults model = new Models.ProductPaginationResults()
+            if (model == null)
             {
-                Page = page,
-                PageSize = pageSize,
-                SearchValue = searchValue,
-                RowCount = rowCount,
-                CategoryName = categoryName,
-                SupllierName = supplierName,
-                Data = data
-            };
+                string search = Session["PRODUCT_SEARCH"] as string;
+                model = new Models.PaginationProductSearchInput()
+                {
+                    Page = 1,
+                    PageSize = 10,
+                    SearchValue = search != null ? search : "",
+                    CategoryID = 0,
+                    SupplierID = 0
+                };
+
+            }
             return View(model);
         }
         /// <summary>
@@ -60,17 +48,16 @@ namespace SV18T1021118.Web.Controllers
         public ActionResult Search(Models.PaginationProductSearchInput input)
         {
             int rowCount = 0;
-            var data = CommonDataService.ListOfProducts(input.CategoryName, input.SupplierName, input.Page, input.PageSize, input.SearchValue, out rowCount);
-
+            var data = CommonDataService.Product_List(input.Page, input.PageSize, input.SearchValue, out rowCount, input.CategoryID, input.SupplierID);
             Models.ProductPaginationResults model = new Models.ProductPaginationResults()
             {
                 Page = input.Page,
                 PageSize = input.PageSize,
                 SearchValue = input.SearchValue,
                 RowCount = rowCount,
-                CategoryName = input.CategoryName,
-                SupllierName = input.SupplierName,
-                Data = data
+                Data = data,
+                categoryID = input.CategoryID,
+                supplierID = input.SupplierID
             };
             Session["PRODUCT_SEARCH"] = input;
             return View(model);
@@ -90,35 +77,57 @@ namespace SV18T1021118.Web.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="uploadPhoto"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult Save(Product model, HttpPostedFileBase uploadPhoto)
         {
             if (string.IsNullOrWhiteSpace(model.ProductName))
-                ModelState.AddModelError("ProductName", "Tên sản phẩm không được để trống");
-            if (string.IsNullOrWhiteSpace(model.Price.ToString()))
-                ModelState.AddModelError("Price", "Giá không được để trống");
+                ModelState.AddModelError("ProductName", "Tên mặt hàng không được để trống.");
             if (string.IsNullOrWhiteSpace(model.Unit))
-                ModelState.AddModelError("Unit", "Đơn vị tính không được để trống");
-
-            if (!ModelState.IsValid)
-            {       
-                return View("Create", model);
+                ModelState.AddModelError("Unit", "Đơn vị mặt hàng hàng không được để trống.");
+            if (string.IsNullOrWhiteSpace(model.Price))
+                ModelState.AddModelError("Price", "Giá mặt hàng không được để trống.");
+            else
+            {
+                string[] subs = (model.Price).Split('.');
+                if (subs.Length > 2) ModelState.AddModelError("Price", "Giá mặc hàng không hợp lệ. Vd: 50, 45.5, 199.55");
+                else foreach (var sub in subs)
+                    {
+                        var isNumeric = int.TryParse(sub, out _);
+                        if (!isNumeric)
+                        {
+                            ModelState.AddModelError("Price", "Giá mặc hàng không hợp lệ. Vd: 50, 45.5, 199.55");
+                            break;
+                        }
+                    }
             }
-
+            if (model.CategoryID == 0)
+                ModelState.AddModelError("CategoryID", "Vui lòng chọn loại hàng.");
+            if (model.SupplierID == 0)
+                ModelState.AddModelError("SupplierID", "Vui lòng chọn nhà cung cấp.");
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Title = model.ProductID == 0 ? "Cập nhật thông tin mặt hàng" : "Bổ sung mặt hàng";
+                return View(model.ProductID == 0 ? "Create" : "Edit", model);
+            }
+            // upload file picture
             if (uploadPhoto != null)
             {
-                string path = Server.MapPath("~/Images/Products");
-                string fileName = $"{DateTime.Now.Ticks} - {uploadPhoto.FileName}";
-                string filePath = System.IO.Path.Combine(path, fileName);
-                uploadPhoto.SaveAs(filePath);
-                model.Photo = fileName;
+                string _FileName = DateTime.Now.Ticks + "-" + Path.GetFileName(uploadPhoto.FileName);
+                string _path = Path.Combine(Server.MapPath("~/Images/Products"), _FileName);
+                uploadPhoto.SaveAs(_path);
+                model.Photo = _FileName;
             }
-            if (model.Photo == null)
-                model.Photo = "";
-
             if (model.ProductID == 0)
             {
+                if (uploadPhoto == null) model.Photo = "";
                 CommonDataService.AddProduct(model);
+                Session["PRODUCT_SEARCH"] = model.ProductName;
             }
             else
             {

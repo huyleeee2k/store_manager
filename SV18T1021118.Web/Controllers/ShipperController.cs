@@ -32,7 +32,11 @@ namespace SV18T1021118.Web.Controllers
             }
             return View(model);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public ActionResult Search(Models.PaginationSearchInput input)
         {
             int rowCount = 0;

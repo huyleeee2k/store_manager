@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using SV18T1021118.DataLayer;
 using SV18T1021118.DomainModel;
 using System.Configuration;
+using SV18T1021118.DataLayer.SQLServer;
 
 namespace SV18T1021118.BusinessLayer
 {
@@ -20,9 +21,10 @@ namespace SV18T1021118.BusinessLayer
         private static readonly ICommonDAL<Shipper> shipperDB;
         private static readonly ICommonDAL<Employee> employeeDB;
         private static readonly ICommonDAL<Country> countryDB;
-        private static readonly ICommonDAL<Product> productDB;
+        private static readonly IProductDAL productDB;
         private static readonly ICommonDAL<ProductAttribute> productAttributeDB;
         private static readonly ICommonDAL<ProductPhoto> productPhotoDB;
+        private static readonly AccountDAL accountDB;
         static CommonDataService()
         {
             string provider = ConfigurationManager.ConnectionStrings["DB"].ProviderName;
@@ -38,6 +40,7 @@ namespace SV18T1021118.BusinessLayer
                     employeeDB = new DataLayer.SQLServer.EmployeeDAL(connectionString);
                     countryDB = new DataLayer.SQLServer.CountryDAL(connectionString);
                     productDB = new DataLayer.SQLServer.ProductDAL(connectionString);
+                    accountDB = new DataLayer.SQLServer.AccountDAL(connectionString);
                     productAttributeDB = new DataLayer.SQLServer.ProductAttributeDAL(connectionString);
                     productPhotoDB = new DataLayer.SQLServer.ProductPhotoDAL(connectionString);
                     break;
@@ -49,22 +52,53 @@ namespace SV18T1021118.BusinessLayer
         //public static ICategoryDAL CategoryDB { get => CategoryDB1; set => CategoryDB1 = value; }
         //public static ICategoryDAL CategoryDB1 { get => categoryDB; set => categoryDB = value; }
         //public static ICategoryDAL CategoryDB2 { get => categoryDB; set => categoryDB = value; }
+    
+        /// <summary>
+        /// Kiểm tra xem tài khoản đăng nhập có hợp lệ hay không?
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        public static bool IsValidUser(string email, string password)
+        {
+            return accountDB.IsValidUser(email, password);
+        }
+
+
+        public static bool ChangePassword(string email, string password)
+        {
+            return accountDB.ChangePassword(email, password);
+        }
+        ///// <summary>
+        ///// Tìm kiếm lấy danh sách mặt hàng dưới dạng phân trang trang
+        ///// </summary>
+        ///// <param name="page"> vị trí trang</param>
+        ///// <param name="pageSize"> số phần tử trong 1 trang</param>
+        ///// <param name="searchValue"> chuỗi cần tìm kiếm </param>
+        ///// <param name="rowCount"> số phần tử tìm kiếm được </param>
+        ///// <returns>Danh sách khách hàng tìm kiếm được</returns>
+        //public static List<Product> ListOfProducts()
+        //{
+        //    return productDB.List().ToList();
+        //}
 
         /// <summary>
-        /// Lấy danh sách mặt hàng và phân trang
+        /// 
         /// </summary>
-        /// <param name="categoryName"></param>
-        /// <param name="supplierName"></param>
         /// <param name="page"></param>
         /// <param name="pageSize"></param>
         /// <param name="searchValue"></param>
         /// <param name="rowCount"></param>
+        /// <param name="categoryID"></param>
+        /// <param name="supplierID"></param>
         /// <returns></returns>
-        public static List<Product> ListOfProducts(string categoryName, string supplierName, int page, int pageSize, string searchValue, out int rowCount)
+        public static List<Product> Product_List(int page, int pageSize, string searchValue, out int rowCount, int categoryID, int supplierID)
         {
-            rowCount = productDB.CountByValue(categoryName, supplierName, searchValue);
-            return productDB.ListProducts(categoryName, supplierName, page, pageSize, searchValue).ToList();
+            rowCount = productDB.Count(searchValue, categoryID, supplierID);
+            return productDB.List(searchValue, pageSize, page, categoryID, supplierID).ToList();
+            // return productDB.List(searchValue, pageSize, page).ToList();
         }
+
         /// <summary>
         /// 
         /// </summary>
