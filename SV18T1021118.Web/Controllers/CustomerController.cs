@@ -66,8 +66,7 @@ namespace SV18T1021118.Web.Controllers
             Customer model = new Customer()
             {
                 CustomerID = 0
-            };
-            Session["CUSTOMER_NAME"] = "";
+            };           
             return View(model);
         }
 
@@ -81,7 +80,7 @@ namespace SV18T1021118.Web.Controllers
             Customer model = CommonDataService.GetCustomer(customerID);
             if (model == null)
                 return RedirectToAction("Index");
-
+            Session["CUSTOMER_NAME"] = "";
             return View(model);
         }
         /// <summary>

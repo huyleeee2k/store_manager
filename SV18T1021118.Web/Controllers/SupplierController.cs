@@ -80,7 +80,7 @@ namespace SV18T1021118.Web.Controllers
             Supplier model = CommonDataService.GetSuppliers(supplierID);
             if (model == null)
                 return RedirectToAction("Index");
-
+            Session["SUPPLIER_NAME"] = "";
             return View(model);
         }
         /// <summary>

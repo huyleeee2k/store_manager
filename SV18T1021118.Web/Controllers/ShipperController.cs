@@ -63,6 +63,7 @@ namespace SV18T1021118.Web.Controllers
             {
                 ShipperID = 0
             };
+            Session["SHIPPER_NAME"] = "";
             ViewBag.Title = "Bổ sung nguoi giao hang";
             return View(model);
         }
@@ -79,7 +80,7 @@ namespace SV18T1021118.Web.Controllers
             Shipper model = CommonDataService.GetShipper(shipperID);
             if (model == null)
                 return RedirectToAction("Index");
-
+            Session["SHIPPER_NAME"] = "";
             ViewBag.Title = "Thay đổi thông tin nguoi giao hang";
             return View("Create", model);
         }
@@ -106,14 +107,13 @@ namespace SV18T1021118.Web.Controllers
             if (model.ShipperID == 0)
             {
                 CommonDataService.AddShipper(model);
-                return RedirectToAction("Index");
+                Session["SHIPPER_NAME"] = model.ShipperName;
             }
             else
             {
-                CommonDataService.UpdateShipper(model);
-                return RedirectToAction("Index");
+                CommonDataService.UpdateShipper(model);               
             }
-
+            return RedirectToAction("Index");
         }
         /// <summary>
         /// 

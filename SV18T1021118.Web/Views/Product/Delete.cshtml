@@ -1,0 +1,64 @@
+﻿@model SV18T1021118.DomainModel.Product
+@{
+    ViewBag.Title = "Xóa mặt hàng";
+}
+
+<div class="box box-primary">
+    <div class="box-header with-border ">
+    </div>
+
+    <div class="box-body">
+        <form class="form-horizontal" action="~/product/delete/@Model.ProductID" method="post">
+            <div class="form-group">
+                <label class="control-label col-sm-2">Tên mặt hàng:</label>
+                <div class="col-sm-10">
+                    <p class="form-control-static">@Model.ProductName</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2">Đơn vị tính:</label>
+                <div class="col-sm-10">
+                    <p class="form-control-static">@Model.Unit</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2">Giá hàng:</label>
+                <div class="col-sm-10">
+                    <p class="form-control-static">@Model.Price</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2">Ảnh minh họa:</label>
+                <div class="col-sm-10">
+                    <img src="~/Images/Products/@Model.Photo" class="img img-bordered" style="width:200px" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    @if (SV18T1021118.BusinessLayer.CommonDataService.InUsedProduct(Model.ProductID))
+                    {
+                        <p class="text-danger">không được xoá mặt hàng này !</p>
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn btn-warning">
+
+                            <i class="fa fa-save"></i>Đồng ý xoá
+                        </button>
+                    }
+                    <a href="~/product" class="btn btn-yahoo">
+                        <i class="fa fa-ban"></i> Quay lại
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="box-footer text-center">
+    </div>
+
+</div>
+

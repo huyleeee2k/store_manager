@@ -82,7 +82,7 @@ namespace SV18T1021118.Web.Controllers
             Category model = CommonDataService.GetCategory(categoryID);
             if (model == null)
                 return RedirectToAction("Index");
-
+            Session["CATEGORY_NAME"] = "";
             ViewBag.Title = "Thay đổi thông tin loaị hàng";
             return View("Create", model);
         }

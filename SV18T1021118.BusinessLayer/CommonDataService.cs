@@ -64,7 +64,12 @@ namespace SV18T1021118.BusinessLayer
             return accountDB.IsValidUser(email, password);
         }
 
-
+        /// <summary>
+        /// Thay đổi mật khẩu
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
         public static bool ChangePassword(string email, string password)
         {
             return accountDB.ChangePassword(email, password);

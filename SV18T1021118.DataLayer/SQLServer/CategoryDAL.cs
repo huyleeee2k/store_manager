@@ -244,12 +244,24 @@ namespace SV18T1021118.DataLayer.SQLServer
             }
             return data;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public IList<Category> List(int id)
         {
             throw new NotImplementedException();
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="categoryName"></param>
+        /// <param name="supplierName"></param>
+        /// <param name="page"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="searchValue"></param>
+        /// <returns></returns>
         public IList<Category> ListProducts(string categoryName, string supplierName, int page = 1, int pageSize = 0, string searchValue = "")
         {
             throw new NotImplementedException();

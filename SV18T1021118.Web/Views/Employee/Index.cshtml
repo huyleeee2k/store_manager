@@ -1,0 +1,49 @@
+﻿@model SV18T1021118.Web.Models.PaginationSearchInput
+@{
+    ViewBag.Title = "Nhân viên";
+}
+
+<form id="searchInput" action="~/employee/search" method="get">
+    <div class="input-group">
+        @Html.HiddenFor(m => m.PageSize)
+        @if (@Session["EMPLOYEE_NAME"] != null)
+        {
+            <input type="text" name="searchValue" class="form-control" placeholder="Nhập tên và địa chỉ cần tìm" autofocus value="@Session["EMPLOYEE_NAME"]">
+        }
+        else
+        {
+            <input type="text" name="searchValue" class="form-control" placeholder="Nhập tên và địa chỉ cần tìm" autofocus value="@Model.SearchValue">
+        }
+        <span class="input-group-btn">
+            <button type="submit" id="search-btn" class="btn btn-flat btn-info">
+                <i class="fa fa-search"></i>
+            </button>
+            <a href="~/employee/create"
+               class="btn btn-flat btn-primary"
+               style="margin-left:5px;">
+                <i class="fa fa-plus"></i> Bổ sung
+            </a>
+        </span>
+    </div>
+</form>
+
+<div id="searchResult">
+
+</div>
+
+@section scripts{
+    <script src="~/Scripts/Search.js"></script>
+    <script>
+        $(document).ready(function(){
+            doSearch(@Model.Page);
+            $("#searchInput").submit(function (e){
+                e.preventDefault();
+                doSearch(1);
+                return false;
+            });
+        });
+    </script>
+}
+
+
+

@@ -81,7 +81,7 @@ namespace SV18T1021118.Web.Controllers
             Employee model = CommonDataService.GetEmployee(employeeID);
             if (model == null)
                 return RedirectToAction("Index");
-
+            Session["EMPLOYEE_NAME"] = "";
             ViewBag.Title = "Thay đổi thông tin nhân viên";
             return View("Create", model);
         }
@@ -109,7 +109,7 @@ namespace SV18T1021118.Web.Controllers
             }
             catch
             {
-                ModelState.AddModelError("BirthDate", "Ngày sinh " + model.BirthDate + " không hợp lệ");
+                ModelState.AddModelError("BirthDate", "Ngày sinh không hợp lệ");
             }
 
             if (!ModelState.IsValid)

@@ -71,7 +71,6 @@ namespace SV18T1021118.Web.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
-        [AllowAnonymous]
         [HttpGet]
         public ActionResult ChangePassword()
         {
@@ -85,7 +84,6 @@ namespace SV18T1021118.Web.Controllers
         /// <param name="passwordNew"></param>
         /// <param name="passwordNewRepeat"></param>
         /// <returns></returns>
-        [AllowAnonymous]
         [HttpPost]
         public ActionResult ChangePassword(string passwordOld, string passwordNew, string passwordNewRepeat)
         {

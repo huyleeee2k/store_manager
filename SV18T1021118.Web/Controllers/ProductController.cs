@@ -32,7 +32,7 @@ namespace SV18T1021118.Web.Controllers
                 {
                     Page = 1,
                     PageSize = 10,
-                    SearchValue = search != null ? search : "",
+                    SearchValue = "",
                     CategoryID = 0,
                     SupplierID = 0
                 };
@@ -73,7 +73,23 @@ namespace SV18T1021118.Web.Controllers
             {
                 ProductID = 0
             };
+            Session["PRODUCT_SEARCH"] = "";
             ViewBag.Title = "Bổ sung mặt hàng";
+            return View(model);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="productID"></param>
+        /// <returns></returns>
+        [Route("edit/{productID}")]
+        public ActionResult Edit(int productID, HttpPostedFileBase uploadPhoto)
+        {
+            Product model = CommonDataService.GetProduct(productID);
+            if (model == null)
+                return RedirectToAction("Index");
+            Session["PRODUCT_SEARCH"] = "";
             return View(model);
         }
 
@@ -95,13 +111,13 @@ namespace SV18T1021118.Web.Controllers
             else
             {
                 string[] subs = (model.Price).Split('.');
-                if (subs.Length > 2) ModelState.AddModelError("Price", "Giá mặc hàng không hợp lệ. Vd: 50, 45.5, 199.55");
+                if (subs.Length > 2) ModelState.AddModelError("Price", "Giá mặc hàng không hợp lệ.");
                 else foreach (var sub in subs)
                     {
                         var isNumeric = int.TryParse(sub, out _);
                         if (!isNumeric)
                         {
-                            ModelState.AddModelError("Price", "Giá mặc hàng không hợp lệ. Vd: 50, 45.5, 199.55");
+                            ModelState.AddModelError("Price", "Giá mặc hàng không hợp lệ.");
                             break;
                         }
                     }
@@ -136,20 +152,7 @@ namespace SV18T1021118.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="productID"></param>
-        /// <returns></returns>
-        [Route("edit/{productID}")]
-        public ActionResult Edit(int productID, HttpPostedFileBase uploadPhoto)
-        {
-            Product model = CommonDataService.GetProduct(productID);
-            if (model == null)
-                return RedirectToAction("Index");
-        
-            return View(model);
-        }
+
         /// <summary>
         /// 
         /// </summary>
